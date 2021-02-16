@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event practice</title>
+    <style>
+
+      body {
+        text-align: center;
+      }
+
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 80%;
+        max-width: 500px;
+        padding: 20px;
+        margin: 20px auto;
+        border: 1px solid grey;
+        background-color: white;
+        color: black;
+      }
+
+      .active {
+        background-color: lightseagreen;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Event Practice: Capture & Bubble</h1>
+    <main class="app">
+      <div id="a">
+        a
+        <div id="b">
+          b
+          <div id="c"> c </div>
+        </div>
+      </div>
+
+    </main>
+
+    <script>
+      function app() {
+        const app = document.querySelector('.app');
+        const targets = document.querySelectorAll('div');
+        const c = document.querySelector('#c');
+        const eventType = 'click';
+        let useCapture = false;
+        let bubbles = false;
+
+        function addMouseOverListener(nodeList) {
+          nodeList.forEach(node => {
+            node.addEventListener('mouseover', e => e.target.classList.add('active'));
+            node.addEventListener('mouseout', e => e.target.classList.remove('active'));
+          });
+        }
+
+        function addNodeListListener(nodeList, type, handler, useCapture) {
+          nodeList.forEach(node => {
+            node.addEventListener(type, handler, useCapture);
+          });
+        }
+
+        function removeNodeListListener(nodeList, type, handler, useCapture) {
+          nodeList.forEach(node => {
+            node.removeEventListener(type, handler, useCapture);
+          });
+        }
+
+        function appendButtonDispatch(target) {
+          const button = document.createElement('button');
+          button.innerText = 'dispatch event';
+          button.addEventListener('click', () => {
+            console.log(`${eventType} dispatched on ${target.id}`)
+            target.dispatchEvent(new Event(eventType, { bubbles }));
+          });
+          app.append(button);
+        }
+
+        function addButtonUseCapture() {
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.name = 'useCapture';
+
+          const label = document.createElement('label');
+          label.for =  'useCapture';
+          label.innerText = 'useCapture';
+
+          input.addEventListener('change', e => {
+            
+          });
+          app.append(input, label);
+        }
+
+        function appendCheckbox(name, handler) {
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.name = name;
+
+          const label = document.createElement('label');
+          label.for =  name;
+          label.innerText = name;
+
+          input.addEventListener('change', handler);
+          app.append(input, label);
+        }
+
+        function useCaptureHandler(e) {
+          useCapture = e.target.checked;
+          console.log(`useCapture ${ useCapture ? 'on' : 'off' }`);
+          removeNodeListListener(targets, eventType, logEventInfo, !useCapture);
+          addNodeListListener(targets, eventType, logEventInfo, useCapture);
+        }
+
+        function bubblesHandler(e) {
+          bubbles = e.target.checked;
+          console.log(`bubbles ${ bubbles ? 'on' : 'off'}`);
+        }
+
+
+        function logEventInfo ({ type, target, currentTarget, eventPhase }) {
+          const phaseName = { 1: 'capture', 2: 'target', 3: 'bubble'};
+          console.log(`
+            type          : ${type}
+            target        : ${target.id}
+            currentTarget : ${currentTarget.id}
+            eventPhase    : ${phaseName[eventPhase]}
+        `)};
+
+        function render() {
+          addMouseOverListener(targets);
+          appendButtonDispatch(c);
+          addNodeListListener(targets, eventType, logEventInfo, useCapture);
+          appendCheckbox('useCapture', useCaptureHandler);
+          appendCheckbox('bubbles', bubblesHandler);
+          
+          alert(`
+          결과는 콘솔에 출력됩니다.
+          F12를 눌러 개발자도구를 열고 조작해주세요.
+          `);
+        }
+      
+        render();
+      }
+
+      app();
+    </script>
+  </body>
+</html>
