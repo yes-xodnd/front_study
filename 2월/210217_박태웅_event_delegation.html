@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Practice</title>
+    <style>
+      body {
+        text-align: center;
+        box-sizing: border-box;
+      }
+
+      input {
+        width: 80%;
+        max-width: 490px;
+        border: none;
+        border-bottom: 1px solid grey;
+      }
+
+      input:focus {
+        outline: none;
+      }
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        text-align: left;
+      }
+
+      li {
+        width: 80%;
+        max-width: 500px;
+        margin: 10px;
+        padding: 10px;
+        box-shadow: 3px 3px 10px lightgrey;
+      }
+
+    </style>
+  </head>
+  <body>
+    <h1>Event Practice: Delegation</h1>
+    <main class="app"></main>
+
+    <script>
+      class App {  
+
+        constructor($el) {
+          this.$el = $el;
+          this.render();
+        }
+
+        handleInput() {
+          const { value } = this.$input;
+          if (!value) {
+            alert('값을 입력하세요');
+            return;
+          }
+          this.addTask(value);
+          this.$input.value = null;
+        }
+
+        addTask(content) {
+          const li = document.createElement('li');
+          li.innerText = content;
+          this.$container.append(li);
+        }
+
+        deleteTask(e) {
+          e.target.remove();
+        }
+
+        render() {
+          const template = `
+            <input type="text" placeholder="할일을 입력하세요" />
+            <button>+</button>
+            <ul class="container"></ul>
+          `;
+
+          this.$el.innerHTML = template;
+          this.$input = document.querySelector('input');
+          this.$button = document.querySelector('button');
+          this.$container = document.querySelector('.container');
+          
+          this.$button.addEventListener('click', this.handleInput.bind(this));
+          this.$container.addEventListener('click', this.deleteTask);
+        }
+      }
+
+      function mountApp(selector) {
+        const el = document.querySelector(selector);
+        new App(el);
+      }
+
+      mountApp('.app');
+
+    </script>
+  </body>
+</html>
