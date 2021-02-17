@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Darkmode Practice</title>
+  <style>
+    body.light {
+      --main-bg-color: white;
+      --main-text-color: black;
+    }
+
+    body.dark {
+      --main-bg-color: black;
+      --main-text-color: white;
+    }
+
+    body {
+      color: var(--main-text-color);
+      background-color: var(--main-bg-color);
+      text-align: center;
+      transition: 300ms;
+    }
+
+  </style>
+</head>
+<body class="light">
+  <script>
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.body.className = 'dark';
+    }
+  </script>
+
+  <h1>Darkmode Practice</h1>
+  <input type="checkbox" name="color-scheme" id="color-scheme">
+  <label for="color-scheme">다크모드 적용하기</label>
+
+  <script>
+    const cb = document.querySelector('#color-scheme');
+    cb.checked = document.body.className === 'dark';
+    cb.addEventListener('change', e => {
+      document.body.className = e.target.checked ? 'dark' : 'light';
+    });
+  </script>
+</body>
+</html>
