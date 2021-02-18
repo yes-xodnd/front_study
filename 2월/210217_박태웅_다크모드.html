@@ -8,7 +8,7 @@
   <style>
     body.light {
       --main-bg-color: white;
-      --main-text-color: black;
+      --main-text-color: black; 
     }
 
     body.dark {
@@ -26,6 +26,7 @@
   </style>
 </head>
 <body class="light">
+  <!-- 렌더링 전에 테마를 파악하고 적용할 수 있도록 가장 먼저 실행 -->
   <script>
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.body.className = 'dark';
