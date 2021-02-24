@@ -19,11 +19,25 @@
 
 - 콜백함수와 옵션을 작성하고, 생성자로 `IntersectionObserver` 인스턴스를 생성합니다.
 
+- 콜백함수는 항상 `entries`, `observer` 인수를 전달받으며,  `entries`는 IntersectionObserverEntry 객체의 배열입니다.
+
+- IntersectionObserverEntry 객체의 속성을 이용해 교차 여부를 확인하고 로직을 실행시킬 수 있습니다.
+
+- 속성은 아래의 링크에서 자세히 확인할 수 있습니다.
+
+  > [MDN - IntersectionObserverEntry](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry)
+
 ``` js
 // 대상 요소가 보이는 비율(교차비율; intersectionRatio)이 설정한 역치값보다 클 때 호출되는 함수
 const callback = (entries, observer) => {
     // entries  : IntersectionObserverEntry 객체의 배열
     // observer : 자신을 호출한 IntersectionObserver 인스턴스
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.opacity = 1;
+            observer.unobserve(entry.target);
+        }
+    })
 };
 
 // Optional
@@ -44,6 +58,12 @@ const observer = new IntersectionObserver(callback, options);
 ``` js
 const target = document.querySelector('.target');
 observer.observe(target);
+```
+
+- 더이상 사용하지 않는 경우에는 `disconnect()` 메서드를 이용해 인스턴스 작동을 종료할 수 있습니다.
+
+``` js
+observer.disconnect();
 ```
 
 
