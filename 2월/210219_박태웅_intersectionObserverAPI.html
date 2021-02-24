@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IntersectionObserver</title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    .box {
+      margin: 50px auto;
+      width: 500px;
+      height: 300px;
+      background: rgb(219, 222, 228);
+      box-shadow: 5px 5px 15px lightgrey;
+      opacity: 0;
+      transition: 500ms;
+      font-size: 10rem;
+    }
+
+    #infinite-loader {
+      height: 0px;
+      font-size: 10rem;
+    }
+
+  </style>
+
+</head>
+<body>
+  <div id="app">
+    <div id="box-container"></div>
+    <div id="infinite-loader"></div>
+  </div>
+
+  <script>
+    const container = document.querySelector('#box-container');
+    const observer = createIntersectionObserver();
+    useInfiniteLoader(observer, appendBox);
+
+    function createIntersectionObserver() {
+      const callback = (entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const { target } = entry;
+            target.style.opacity = 1;
+            observer.unobserve(target);
+          }
+        });
+      }
+      return new IntersectionObserver(callback, { threshold: 0.7 });
+    }
+    
+    function appendBox() {
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < 10; i++) {
+        const div = document.createElement('div');
+        div.className = 'box';
+        div.innerText = i;
+        frag.append(div);
+        observer.observe(div);
+      }
+      container.appendChild(frag);
+    }
+
+  // 1.5초 후
+  function fetchSomeData() {
+    return new Promise(resolve => {
+      setTimeout(() => resolve(), 1500);
+    });
+  }
+
+  function useInfiniteLoader(observer, handler) {
+    const target = document.querySelector('#infinite-loader');
+    
+    let isActive = false;
+    const callback = entries => {
+      entries.forEach(async (entry) => {
+        if (!entry.isIntersecting) return;
+        if (isActive === false) { 
+          isActive = true;
+          target.innerText = 'Loading';
+          await fetchSomeData();
+          handler();
+          target.innerText = null;
+          isActive = false;
+        } else {
+          console.log('wait..');
+        }
+      })
+    };
+    const _observer = new IntersectionObserver(callback, { threshold: 1 });
+    _observer.observe(target);
+  }
+
+  </script>
+</body>
+</html>
