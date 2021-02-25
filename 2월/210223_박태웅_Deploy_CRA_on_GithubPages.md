@@ -15,7 +15,7 @@
   git remote add origin https://github.com/[username]/[reponame].git
   ```
 
-### 2. gh-pages모듈 설치
+### 2. gh-pages 모듈 설치
 
 - `npm`으로 깃헙 페이지 배포를 도와주는 Node.js 모듈 `gh-pages`를 설치해줍니다.
 

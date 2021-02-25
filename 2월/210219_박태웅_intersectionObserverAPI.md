@@ -1,5 +1,15 @@
 # 2021.02.19 IntersectionObserver API
 
+### 목차
+
+0. [IntersectionObserverAPI란?](###0.-IntersectionObserver-API란?)
+1. [사용법](###1.-사용법)
+2. [의문점](###2.-의문점)
+3. [소스코드 뜯어보기](###3.-소스코드 뜯어보기)
+4. 마무리
+
+---
+
 
 
 ## 0. IntersectionObserver API란?
@@ -68,7 +78,73 @@ observer.disconnect();
 
 
 
+## 2. 의문점
 
+- `IntersectionObserver`의 콜백함수에 대한 설명을 보면 한 가지 의문점이 생깁니다.
+
+- 어떤 요소가 뷰포트(또는 어떤 요소)에 교차할 때 실행되는 함수인데, `IntersectionObserverEntry` 객체가 들어있는 배열인 `entries`를 인수로 전달받고 이에 대해 `forEach`로 순회하며 모든 요소에 대해 로직을 수행하도록 하고 있기 때문입니다.
+
+- `isIntersecting`으로 교차 여부를 확인한다고 해도, 반복된 로직 검증은 비효율적일 수 있습니다. 그래서 실험을 통해 `entries`의 개수가 어떻게 변화하는지 확인해보았습니다.
+
+  - 각각 1부터 5까지의 `id`를 가진 `box` 요소를 만들어 `document.body`에 부착한 뒤,  `IntersectionObserver`를 통해 관찰하도록 했습니다.
+  - 교차할 경우 콜백함수의 `entries` 배열을 보기 쉽도록 타겟 요소의 `id`로만 출력해보도록 하겠습니다.
+
+  ``` js
+  const callback = entries => {
+      console.log(entries.map(({ target }) => target.id));
+  }
+  
+  const observer = new IntersectionObserver(callback);
+  
+  function createBox(id) {
+      const box = document.createElement('div');
+      box.className = 'box';
+      box.id = id;
+      return box;
+  }
+  
+  function appendBoxList() {
+      const frag = document.createFragment();
+      
+  	[1, 2, 3, 4, 5].forEach(id => {
+          const box = createBox(id);
+          observer.observe(box);
+          frag.append(box);
+      });
+      
+      document.body.append(frag);
+  }
+  
+  appendBoxList();
+  ```
+
+  - 부착되고 처음에는 무려 7개의 요소가 포함되어있는 것을 볼 수 있습니다.
+  - 화면에 바로 표시된 1번과 2번 박스가 각각 두 번씩 포함되어 있습니다.
+
+  ![image-20210224220242337](210219_박태웅_intersectionObserverAPI.assets/image-20210224220242337.png)
+  - 이후 스크롤을 내리면, 한 번에 하나씩의 요소만 포함되어 출력되는 것을 볼 수 있습니다.
+
+  - 등록된 모든 요소가 아니라, 현재 교차를 확인한 요소에 대해서만 `entries` 배열에 담아 반환하는 것으로 보입니다.
+
+    ![image-20210224220330045](210219_박태웅_intersectionObserverAPI.assets/image-20210224220330045.png)
+
+  - 다만 보이는 순서대로 표시되지 않는 것으로 보아 교차 여부를 확인하는 내부 로직의 작동 방식이 어떤 특수성을 가지고 있는 것 같습니다.
+
+
+
+## 3. 소스코드 뜯어보기
+
+- W3C에서 제공하는 IntersectionObserverAPI의 polyfill 코드를 보면서, 어떻게 작동하는지 간략하게 이해해보았습니다.
+
+> [W3C IntersectionObserverAPI - polyfill](https://github.com/w3c/IntersectionObserver/blob/main/polyfill/intersection-observer.js)
+
+- 시작은 기본 검증 코드입니다. window가 객체가 아니거나, 기능이 네이티브로 작동하면 코드의 실행을 종료합니다.
+
+![image-20210224235147831](210219_박태웅_intersectionObserverAPI.assets/image-20210224235147831.png)
+
+- 그리고 코드를 따라가면, 마지막에 window 객체에 `IntersectionObserver`와 `IntersectionObserverEntry` 생성자를 등록하는 것을 볼 수 있습니다.
+
+  
 
 ---
 
@@ -77,3 +153,4 @@ observer.disconnect();
 > - [MDN - IntersectionObserver API](https://developer.mozilla.org/ko/docs/Web/API/Intersection_Observer_API)
 > - [MDN - timeing element visibility with the IntersectionObserver API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API/Timing_element_visibility)
 > - [google developers - IntersectionObserver's coming into view](https://developers.google.com/web/updates/2016/04/intersectionobserver)
+> - [W3C IntersectionObserverAPI explainer](https://github.com/w3c/IntersectionObserver/blob/main/explainer.md)
