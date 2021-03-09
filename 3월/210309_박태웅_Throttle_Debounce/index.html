@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>Debounce and Throttle</title>
+</head>
+<body>
+  <h1>Debounce and Throttle</h1>
+
+  <div class="search">
+    <div class="search-option">
+      <button class="search-option__button-throttle">use throttle</button>
+      <button class="search-option__button-debounce">use debounce</button>
+      <p class="search-option__text">입력할 때마다 콜백이 실행됩니다.</p>
+    </div>
+
+    <input type="text" class="search__input" placeholder="검색어를 입력하세요" autofocus>
+    <div class="search-keywords">
+      <span>검색 기록</span>
+      <ul class="search-keywords__list">
+
+      </ul>
+    </div>
+  </div>
+  
+  <script src="./main.js"></script>
+</body>
+</html>
