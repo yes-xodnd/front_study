@@ -23,7 +23,7 @@
 
 - 리다이렉션 코드와 상세한 방법은 링크를 참조하시면 됩니다.
 
-  [사용 방법]: https://github.com/rafgraph/spa-github-pages#usage-instructions
+  - https://github.com/rafgraph/spa-github-pages#usage-instructions
 
 
 
