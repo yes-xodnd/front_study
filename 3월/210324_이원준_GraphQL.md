@@ -33,7 +33,6 @@
 - 그외 차이점
 
   - 단순 text의 경우 문제가 없으나 file 전송의 경우 gql의 경우 base64로 인코딩 과정을 거치는등 별도의 처리가 필요합니다.
-  - 
 
 
 
@@ -53,7 +52,6 @@
   type User {
   	id: ID!
   	name: String!
-  	sex: SEX!
   	birthDay: String!
   	phoneNumber: String!
   }
