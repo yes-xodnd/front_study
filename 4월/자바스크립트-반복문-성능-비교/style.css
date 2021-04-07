@@ -1,0 +1,90 @@
+body {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+header {
+  padding: 1rem 2rem;
+  background-color: rgb(41, 41, 41);
+  color: white;
+  box-shadow: 0 0 10px grey;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  margin: auto;
+}
+
+@media screen and (max-width: 800px) {
+  .app {
+    display: block;
+  }
+}
+
+.config {
+  width: 200px;
+  padding: 1.5rem;
+  background-color: rgb(240, 240, 240);
+  border: 1px solid lightgrey;
+}
+
+@media screen and (max-width: 800px) {
+  .config {
+    width: inherit;
+    text-align: center;
+    margin: auto;
+  }
+}
+
+.config label {
+  display: block;
+  font-size: 0.5rem;
+}
+
+.config input {
+  width: 200px;
+  height: 1.5rem;
+  text-align: right;
+  border: none;
+  border-bottom: 1px solid rgb(71, 71, 71);
+}
+
+.button {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.2rem;
+  width: 200px;
+  background-color: grey;
+  border: 1px solid black;
+  color: white;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: tomato;
+}
+
+.result {
+  flex-grow: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 300px);
+  justify-items: center;
+  justify-content: center;
+  padding: 2rem 0 3rem;
+  font-size: 0.8rem;
+}
+
+.result div {
+  width: fit-content;
+}
+
+tr, td {
+  padding: 0.5rem 1rem;
+  border: 1px solid lightgrey;
+}
